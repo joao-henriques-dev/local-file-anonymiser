@@ -12,6 +12,9 @@
 # Local history of files
 .history
 
+# Pipeline outputs (masked documents, reports, reply cache)
+outputs/
+
 # Sensitive configuration
 plan
 **/key.json
