@@ -1,26 +1,14 @@
-import re
 from pathlib import Path
 from string import Template
 
-from submission.anonymizer.config import PROMPT_PATH
-
 MARKER = "### DOCUMENTO ###"
 PROMPTS_DIR = Path(__file__).with_name("prompts")
+BASE_PATH = PROMPTS_DIR / "base.md"
 
 
-def load_base(path: Path = PROMPT_PATH) -> str:
-    """Return prompt.txt's instructions, without the embedded document.
-
-    prompt.txt carries the document so it works single-shot in CI; the
-    pipeline passes the document to each agent itself.
-    """
-    text = path.read_text(encoding="utf-8")
-    # Only a line holding just the marker splits: the instructions may
-    # mention the marker inline when telling the model where to look.
-    match = re.search(rf"^{re.escape(MARKER)}$", text, flags=re.MULTILINE)
-    if match:
-        text = text[:match.start()]
-    return text.strip()
+def load_base(path: Path = BASE_PATH) -> str:
+    """Return the instructions every agent prompt starts with."""
+    return path.read_text(encoding="utf-8").strip()
 
 
 def compose(base: str, agent: str, document: str, **fields: str) -> str:

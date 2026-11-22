@@ -1,7 +1,9 @@
+import tempfile
 import unittest
+from pathlib import Path
 
-from submission.anonymizer import config
 from submission.anonymizer.extract import clean_lines, pdf_to_text
+from submission.tests.helpers import sample_text, write_sample_pdf
 
 
 class TestExtract(unittest.TestCase):
@@ -12,15 +14,10 @@ class TestExtract(unittest.TestCase):
             "Relatório\nA paciente relatou dores\nabdominais",
         )
 
-    def test_real_pdf_header(self):
-        text = pdf_to_text(config.PDF_PATH)
-        self.assertEqual(text.splitlines()[:4], [
-            "Relatório de Admissão - Centro Médico Lisboa",
-            "Data: 15 de abril de 2025",
-            "Referência: ADM-2025-04-15-089",
-            "Informações do Paciente:",
-        ])
-        self.assertIn("Nome: Maria Conceição Oliveira Santos", text)
+    def test_pdf_text_keeps_lines_and_accents(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = write_sample_pdf(Path(directory))
+            self.assertEqual(pdf_to_text(path), sample_text())
 
 
 if __name__ == "__main__":

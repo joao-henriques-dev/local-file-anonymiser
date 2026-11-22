@@ -1,11 +1,12 @@
-"""Anonymise the challenge PDF.
+"""Anonymise a PDF document.
 
 Run from the repo root:
-    python -m submission.run                 # pipeline -> submission.txt
-    python -m submission.run --single-shot   # prompt.txt alone, like CI
+    python -m submission.run report.pdf                  # -> report.masked.txt
+    python -m submission.run report.pdf -o masked.txt    # chosen output path
 """
 import argparse
 import sys
+from pathlib import Path
 
 from submission.anonymizer import config
 from submission.anonymizer.base_prompt import load_base
@@ -19,23 +20,23 @@ from submission.validation import DocumentValidator
 def main(argv: list[str] | None = None,
          client: LLMClient | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
-    parser.add_argument("--single-shot", action="store_true",
-                        help="send prompt.txt alone, as the CI check does")
+    parser.add_argument("input", type=Path, help="the PDF to anonymise")
+    parser.add_argument("-o", "--output", type=Path,
+                        help="where to write the masked text "
+                             "(default: <input>.masked.txt next to it)")
     parser.add_argument("--no-validate", action="store_true",
                         help="skip the meaning-preservation score")
     parser.add_argument("--no-cache", action="store_true",
-                        help="ask Gemini again instead of reusing replies")
+                        help="ask the model again instead of reusing replies")
     args = parser.parse_args(argv)
+    output = args.output or args.input.with_suffix(".masked.txt")
 
     try:
         if client is None:
             client = make_client(config.main_model(),
                                  refresh=args.no_cache)
 
-        if args.single_shot:
-            _single_shot(client)
-        else:
-            _pipeline(client, validate=not args.no_validate)
+        _pipeline(args.input, output, client, validate=not args.no_validate)
     except Exception as error:
         print(f"error: {error}", file=sys.stderr)
         return 1
@@ -43,20 +44,14 @@ def main(argv: list[str] | None = None,
     return 0
 
 
-def _single_shot(client: LLMClient) -> None:
-    prompt = config.PROMPT_PATH.read_text(encoding="utf-8")
-    output = client.generate_text(prompt)
-    config.OUTPUTS_DIR.mkdir(parents=True, exist_ok=True)
-    write_utf8(config.OUTPUTS_DIR / "single_shot.txt", output)
-
-
-def _pipeline(client: LLMClient, validate: bool) -> None:
-    text = pdf_to_text(config.PDF_PATH)
+def _pipeline(source: Path, output: Path, client: LLMClient,
+              validate: bool) -> None:
+    text = pdf_to_text(source)
     result = run_pipeline(text, load_base(), client)
 
     # Written only after the whole pipeline succeeded, so a failed run
-    # never leaves a half-finished submission behind.
-    write_utf8(config.SUBMISSION_PATH, result.masked)
+    # never leaves a half-finished output behind.
+    write_utf8(output, result.masked)
 
     entailment = None
     if validate and config.validation_model():

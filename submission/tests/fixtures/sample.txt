@@ -1,0 +1,11 @@
+Admission Report - Riverside Clinic
+Date: 3 March 2026
+Reference: ADM-2026-03-03-017
+Patient Information:
+Name: José Antunes Pereira
+Date of Birth: 21/07/1985
+Address: Rua Nova, 8, Coimbra
+Phone: +351 921 000 111
+Email: jose.pereira@example.com
+Clinical Notes:
+The patient reports chest pain since Tuesday.

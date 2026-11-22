@@ -5,7 +5,7 @@ Gemini.
 
 What counts as sensitive comes from anonymizer/categories.json, and masking
 uses the pipeline's own apply_findings, so the ground truth follows the same
-rules as submission.txt.
+rules as the pipeline output.
 
 .env file:
     Either of these is accepted:
@@ -395,7 +395,7 @@ def mask_document(
 ) -> str:
     """
     Mask the sensitive items with the pipeline's own masker, so the ground
-    truth follows exactly the rules submission.txt is produced with
+    truth follows exactly the rules the pipeline output is produced with
     (spec §7): one '*' per whitespace-separated word, edge punctuation
     kept, whole-word matches only, and masking limited to each item's
     context line when it has one.

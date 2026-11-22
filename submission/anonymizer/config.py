@@ -6,12 +6,9 @@ from dotenv import load_dotenv
 SUBMISSION_DIR = Path(__file__).resolve().parents[1]
 REPO_DIR = SUBMISSION_DIR.parent
 
-PROMPT_PATH = SUBMISSION_DIR / "prompt.txt"
-SUBMISSION_PATH = SUBMISSION_DIR / "submission.txt"
 OUTPUTS_DIR = SUBMISSION_DIR / "outputs"
 # Gitignored (.cache): stored replies are local, per prompt and model.
 CACHE_DIR = OUTPUTS_DIR / ".cache"
-PDF_PATH = REPO_DIR / "raw_data" / "document_to_anonymize.pdf"
 
 DEFAULT_MODEL = "gemini-3.8-flash"
 TEMPERATURE = 0.0

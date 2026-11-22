@@ -8,8 +8,8 @@ from unittest.mock import patch
 
 from submission import run
 from submission.anonymizer import config
-from submission.anonymizer.extract import pdf_to_text
 from submission.tests.fakes import FakeLLMClient
+from submission.tests.helpers import sample_text, write_sample_pdf
 
 
 def no_findings(prompt, schema):
@@ -23,15 +23,14 @@ class TestMain(unittest.TestCase):
         directory = tempfile.TemporaryDirectory()
         self.addCleanup(directory.cleanup)
         root = Path(directory.name)
-        self.submission = root / "submission.txt"
-        self.submission.write_text("OLD", encoding="utf-8")
+        self.source = write_sample_pdf(root)
+        self.output = root / "masked.txt"
+        self.output.write_text("OLD", encoding="utf-8")
         self.outputs = root / "outputs"
 
-        for name, value in (("SUBMISSION_PATH", self.submission),
-                            ("OUTPUTS_DIR", self.outputs)):
-            patcher = patch.object(config, name, value)
-            patcher.start()
-            self.addCleanup(patcher.stop)
+        patcher = patch.object(config, "OUTPUTS_DIR", self.outputs)
+        patcher.start()
+        self.addCleanup(patcher.stop)
 
     def run_main(self, args, client):
         stderr = io.StringIO()
@@ -39,51 +38,48 @@ class TestMain(unittest.TestCase):
             code = run.main(args, client=client)
         return code, stderr.getvalue()
 
-    def test_main_writes_submission_only_on_success(self):
-        code, _ = self.run_main(["--no-validate"],
+    def test_main_writes_output_only_on_success(self):
+        code, _ = self.run_main(
+            [str(self.source), "-o", str(self.output), "--no-validate"],
+            FakeLLMClient(no_findings),
+        )
+
+        self.assertEqual(code, 0)
+        written = self.output.read_bytes()
+        self.assertNotIn(b"\r", written)
+        self.assertEqual(written.decode("utf-8"), sample_text())
+        self.assertTrue((self.outputs / "report.md").exists())
+
+    def test_default_output_sits_next_to_input(self):
+        code, _ = self.run_main([str(self.source), "--no-validate"],
                                 FakeLLMClient(no_findings))
 
         self.assertEqual(code, 0)
-        written = self.submission.read_bytes()
-        self.assertNotIn(b"\r", written)
-        self.assertEqual(written.decode("utf-8"),
-                         pdf_to_text(config.PDF_PATH))
-        self.assertTrue((self.outputs / "report.md").exists())
+        default = self.source.with_name("sample.masked.txt")
+        self.assertEqual(default.read_text(encoding="utf-8"), sample_text())
 
-    def test_main_failure_leaves_submission_untouched(self):
+    def test_main_failure_leaves_output_untouched(self):
         def fail(prompt, schema):
-            raise RuntimeError("Gemini failed after retries: 429")
+            raise RuntimeError("model failed after retries: 503")
 
-        code, stderr = self.run_main(["--no-validate"], FakeLLMClient(fail))
+        code, stderr = self.run_main(
+            [str(self.source), "-o", str(self.output), "--no-validate"],
+            FakeLLMClient(fail),
+        )
 
         self.assertEqual(code, 1)
-        self.assertIn("429", stderr)
-        self.assertEqual(self.submission.read_text(encoding="utf-8"), "OLD")
-
-    def test_single_shot_writes_outputs_file(self):
-        client = FakeLLMClient(lambda prompt, schema: "Nome: * *")
-
-        code, _ = self.run_main(["--single-shot"], client)
-
-        self.assertEqual(code, 0)
-        self.assertEqual(client.prompts[0],
-                         config.PROMPT_PATH.read_text(encoding="utf-8"))
-        single_shot = self.outputs / "single_shot.txt"
-        self.assertEqual(single_shot.read_text(encoding="utf-8"),
-                         "Nome: * *")
-        self.assertEqual(self.submission.read_text(encoding="utf-8"), "OLD")
+        self.assertIn("503", stderr)
+        self.assertEqual(self.output.read_text(encoding="utf-8"), "OLD")
 
     def test_replies_are_cached_unless_no_cache(self):
-        for args, refresh in ((["--single-shot"], False),
-                              (["--single-shot", "--no-cache"], True)):
-            with self.subTest(args=args), \
+        base_args = [str(self.source), "-o", str(self.output), "--no-validate"]
+        for extra, refresh in (([], False), (["--no-cache"], True)):
+            with self.subTest(extra=extra), \
                     patch.object(config, "main_model", return_value="m"), \
                     patch.object(run, "make_client") as make_client:
-                make_client.return_value = FakeLLMClient(
-                    lambda prompt, schema: "Nome: * *"
-                )
+                make_client.return_value = FakeLLMClient(no_findings)
 
-                code, _ = self.run_main(args, None)
+                code, _ = self.run_main(base_args + extra, None)
 
                 self.assertEqual(code, 0)
                 make_client.assert_called_once_with("m", refresh=refresh)
