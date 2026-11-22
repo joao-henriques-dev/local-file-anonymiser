@@ -1,18 +1,18 @@
 """Score the pipeline against synthetic ground truth, word by word.
 
 Run from the repo root:
-    python -m submission.evaluate.score [--data DIR]
+    python -m anonymiser.evaluate.score [--data DIR]
 """
 import argparse
 import sys
 from pathlib import Path
 
-from submission.anonymizer import config
-from submission.anonymizer.base_prompt import load_base
-from submission.anonymizer.llm import LLMClient, make_client
-from submission.anonymizer.orchestrator import run_pipeline
+from anonymiser import config
+from anonymiser.base_prompt import load_base
+from anonymiser.llm import LLMClient, make_client
+from anonymiser.orchestrator import run_pipeline
 
-DEFAULT_DATA_DIR = config.SUBMISSION_DIR / "synth" / "data"
+DEFAULT_DATA_DIR = config.PACKAGE_DIR / "synth" / "data"
 MASKED_SUFFIX = "_masked"
 
 

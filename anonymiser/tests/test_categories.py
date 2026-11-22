@@ -1,6 +1,6 @@
 import unittest
 
-from submission.anonymizer.categories import load_categories
+from anonymiser.categories import load_categories
 
 
 class TestCategories(unittest.TestCase):

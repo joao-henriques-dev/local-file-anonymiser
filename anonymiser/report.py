@@ -1,7 +1,7 @@
 import json
 from pathlib import Path
 
-from submission.anonymizer.orchestrator import PipelineResult
+from anonymiser.orchestrator import PipelineResult
 
 
 def write_report(result: PipelineResult, out_dir: Path,

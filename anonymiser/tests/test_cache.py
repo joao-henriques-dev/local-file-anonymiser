@@ -3,9 +3,9 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from submission.anonymizer.llm import CachedClient
-from submission.anonymizer.schemas import EntailmentScore
-from submission.tests.fakes import FakeLLMClient
+from anonymiser.llm import CachedClient
+from anonymiser.schemas import EntailmentScore
+from anonymiser.tests.fakes import FakeLLMClient
 
 
 def score_reply(prompt, schema):

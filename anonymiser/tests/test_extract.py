@@ -2,8 +2,8 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from submission.anonymizer.extract import clean_lines, pdf_to_text
-from submission.tests.helpers import sample_text, write_sample_pdf
+from anonymiser.extract import clean_lines, pdf_to_text
+from anonymiser.tests.helpers import sample_text, write_sample_pdf
 
 
 class TestExtract(unittest.TestCase):

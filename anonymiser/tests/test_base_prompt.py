@@ -2,8 +2,8 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from submission.anonymizer.base_prompt import MARKER, compose, load_base
-from submission.anonymizer.categories import load_categories
+from anonymiser.base_prompt import MARKER, compose, load_base
+from anonymiser.categories import load_categories
 
 
 class TestLoadBase(unittest.TestCase):

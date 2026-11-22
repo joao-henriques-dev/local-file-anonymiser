@@ -6,10 +6,10 @@ import unittest
 from pathlib import Path
 from unittest.mock import patch
 
-from submission import run
-from submission.anonymizer import config
-from submission.tests.fakes import FakeLLMClient
-from submission.tests.helpers import sample_text, write_sample_pdf
+from anonymiser import cli
+from anonymiser import config
+from anonymiser.tests.fakes import FakeLLMClient
+from anonymiser.tests.helpers import sample_text, write_sample_pdf
 
 
 def no_findings(prompt, schema):
@@ -35,7 +35,7 @@ class TestMain(unittest.TestCase):
     def run_main(self, args, client):
         stderr = io.StringIO()
         with contextlib.redirect_stderr(stderr):
-            code = run.main(args, client=client)
+            code = cli.main(args, client=client)
         return code, stderr.getvalue()
 
     def test_main_writes_output_only_on_success(self):
@@ -76,7 +76,7 @@ class TestMain(unittest.TestCase):
         for extra, refresh in (([], False), (["--no-cache"], True)):
             with self.subTest(extra=extra), \
                     patch.object(config, "main_model", return_value="m"), \
-                    patch.object(run, "make_client") as make_client:
+                    patch.object(cli, "make_client") as make_client:
                 make_client.return_value = FakeLLMClient(no_findings)
 
                 code, _ = self.run_main(base_args + extra, None)

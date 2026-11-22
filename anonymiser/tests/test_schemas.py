@@ -1,6 +1,6 @@
 import unittest
 
-from submission.anonymizer.schemas import (
+from anonymiser.schemas import (
     ContextResult,
     EntailmentScore,
     Finding,

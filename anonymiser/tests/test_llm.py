@@ -4,9 +4,9 @@ from unittest.mock import Mock, patch
 
 import httpx
 
-from submission.anonymizer import config, llm
-from submission.anonymizer.llm import GeminiClient
-from submission.anonymizer.schemas import EntailmentScore
+from anonymiser import config, llm
+from anonymiser.llm import GeminiClient
+from anonymiser.schemas import EntailmentScore
 
 SPACING = config.MIN_REQUEST_INTERVAL
 
@@ -27,7 +27,7 @@ class TestGeminiClient(unittest.TestCase):
         env.start()
         self.addCleanup(env.stop)
 
-        client_cls = patch("submission.anonymizer.llm.genai.Client")
+        client_cls = patch("anonymiser.llm.genai.Client")
         self.client_cls = client_cls.start()
         self.addCleanup(client_cls.stop)
         self.generate = self.client_cls.return_value.models.generate_content
@@ -258,7 +258,7 @@ class TestGeminiClient(unittest.TestCase):
 class TestConfig(unittest.TestCase):
     def setUp(self):
         # Never read the developer's real .env from a test.
-        dotenv = patch("submission.anonymizer.config.load_dotenv")
+        dotenv = patch("anonymiser.config.load_dotenv")
         self.load_dotenv = dotenv.start()
         self.addCleanup(dotenv.stop)
 

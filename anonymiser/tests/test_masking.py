@@ -1,7 +1,7 @@
 import unittest
 
-from submission.anonymizer.masking import apply_findings
-from submission.anonymizer.schemas import Finding
+from anonymiser.masking import apply_findings
+from anonymiser.schemas import Finding
 
 
 def F(text, context=""):

@@ -10,12 +10,12 @@ from google import genai
 from google.genai import types
 from pydantic import BaseModel
 
-from submission.anonymizer import config
+from anonymiser import config
 
 T = TypeVar("T", bound=BaseModel)
 
 # When each model was last sent a request (monotonic seconds). Kept at
-# module level because the quota is per model, not per client: run.py and
+# module level because the quota is per model, not per client: cli.py and
 # the validator each build their own GeminiClient.
 _last_request: dict[str, float] = {}
 

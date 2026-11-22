@@ -14,10 +14,10 @@ rules as the pipeline output.
         API_KEY=your_gemini_api_key_here
 
 Examples (from the repo root):
-    python -m submission.data_generator --count 2
-    python -m submission.data_generator --count 5 --outdir generated
-    python -m submission.data_generator --count 2 --max-retries 6
-    python -m submission.data_generator --count 2 --write-items-file
+    python -m anonymiser.data_generator --count 2
+    python -m anonymiser.data_generator --count 5 --outdir generated
+    python -m anonymiser.data_generator --count 2 --max-retries 6
+    python -m anonymiser.data_generator --count 2 --write-items-file
 """
 
 import argparse
@@ -34,13 +34,13 @@ from dotenv import load_dotenv
 from google import genai
 from google.genai import types
 
-from submission.anonymizer import config
-from submission.anonymizer.agents.detector import format_category
-from submission.anonymizer.categories import load_categories
-from submission.anonymizer.masking import apply_findings
-from submission.anonymizer.schemas import Finding
+from anonymiser import config
+from anonymiser.agents.detector import format_category
+from anonymiser.categories import load_categories
+from anonymiser.masking import apply_findings
+from anonymiser.schemas import Finding
 
-DEFAULT_OUTDIR = config.SUBMISSION_DIR / "synth" / "data"
+DEFAULT_OUTDIR = config.PACKAGE_DIR / "synth" / "data"
 
 RETRYABLE_STATUS_CODES = {429, 500, 502, 503, 504}
 

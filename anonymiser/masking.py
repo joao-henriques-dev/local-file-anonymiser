@@ -1,7 +1,7 @@
 import re
 from dataclasses import dataclass
 
-from submission.anonymizer.schemas import Finding
+from anonymiser.schemas import Finding
 
 EDGE_PUNCTUATION = ",.;:()!?"
 

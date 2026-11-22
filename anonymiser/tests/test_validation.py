@@ -3,16 +3,16 @@ import re
 import unittest
 from unittest.mock import patch
 
-from submission.tests.fakes import FakeLLMClient
-from submission.validation import DocumentValidator
+from anonymiser.tests.fakes import FakeLLMClient
+from anonymiser.validation import DocumentValidator
 
 
 class TestValidation(unittest.TestCase):
     def test_default_client_uses_validation_model(self):
         with (
             patch.dict(os.environ, {"VALIDATION_MODEL": "models/test-model"}),
-            patch("submission.anonymizer.config.load_dotenv"),
-            patch("submission.validation.GeminiClient") as client_cls,
+            patch("anonymiser.config.load_dotenv"),
+            patch("anonymiser.validation.GeminiClient") as client_cls,
         ):
             client_cls.return_value.generate_json.return_value.score = 90
             score = DocumentValidator().entailment("Original", "Anonymized")
@@ -24,7 +24,7 @@ class TestValidation(unittest.TestCase):
     def test_missing_validation_model_raises(self):
         with (
             patch.dict(os.environ, {}, clear=True),
-            patch("submission.anonymizer.config.load_dotenv"),
+            patch("anonymiser.config.load_dotenv"),
         ):
             with self.assertRaises(RuntimeError):
                 DocumentValidator().entailment("Original", "Anonymized")

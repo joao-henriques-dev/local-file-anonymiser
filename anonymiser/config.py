@@ -3,11 +3,11 @@ from pathlib import Path
 
 from dotenv import load_dotenv
 
-SUBMISSION_DIR = Path(__file__).resolve().parents[1]
-REPO_DIR = SUBMISSION_DIR.parent
+PACKAGE_DIR = Path(__file__).resolve().parent
+REPO_DIR = PACKAGE_DIR.parent
 
-OUTPUTS_DIR = SUBMISSION_DIR / "outputs"
-# Gitignored (.cache): stored replies are local, per prompt and model.
+OUTPUTS_DIR = REPO_DIR / "outputs"
+# Stored replies are local (outputs/ is gitignored), per prompt and model.
 CACHE_DIR = OUTPUTS_DIR / ".cache"
 
 DEFAULT_MODEL = "gemini-3.8-flash"

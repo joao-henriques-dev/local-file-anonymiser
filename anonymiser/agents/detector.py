@@ -1,7 +1,7 @@
-from submission.anonymizer.base_prompt import compose
-from submission.anonymizer.categories import Category
-from submission.anonymizer.llm import LLMClient
-from submission.anonymizer.schemas import DetectorResult, Finding
+from anonymiser.base_prompt import compose
+from anonymiser.categories import Category
+from anonymiser.llm import LLMClient
+from anonymiser.schemas import DetectorResult, Finding
 
 
 def format_category(category: Category) -> str:

@@ -2,9 +2,9 @@ import os
 import unittest
 from unittest.mock import patch
 
-from submission import data_generator
-from submission.anonymizer import config
-from submission.anonymizer.categories import load_categories
+from anonymiser import data_generator
+from anonymiser import config
+from anonymiser.categories import load_categories
 
 
 def item(text, category="identity", context=""):
@@ -74,7 +74,7 @@ class TestDefaults(unittest.TestCase):
         args = data_generator.parse_args(["--count", "1"])
         with (
             patch.dict(os.environ, {"DATA_GEN_MODEL": "gen"}, clear=True),
-            patch("submission.anonymizer.config.load_dotenv"),
+            patch("anonymiser.config.load_dotenv"),
         ):
             self.assertEqual(data_generator.resolve_model(args), "gen")
 
@@ -85,7 +85,7 @@ class TestDefaults(unittest.TestCase):
     def test_outdir_defaults_to_synth_data(self):
         args = data_generator.parse_args(["--count", "1"])
         self.assertEqual(args.outdir,
-                         str(config.SUBMISSION_DIR / "synth" / "data"))
+                         str(config.PACKAGE_DIR / "synth" / "data"))
 
 
 if __name__ == "__main__":

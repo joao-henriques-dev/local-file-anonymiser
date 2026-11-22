@@ -3,9 +3,9 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from submission.anonymizer.orchestrator import PipelineResult
-from submission.anonymizer.report import write_report
-from submission.anonymizer.schemas import Finding
+from anonymiser.orchestrator import PipelineResult
+from anonymiser.report import write_report
+from anonymiser.schemas import Finding
 
 
 def make_result():

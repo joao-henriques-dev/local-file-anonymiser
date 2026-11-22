@@ -6,15 +6,15 @@ import unittest
 from pathlib import Path
 from unittest.mock import patch
 
-from submission.anonymizer import config
-from submission.evaluate import score
-from submission.evaluate.score import (
+from anonymiser import config
+from anonymiser.evaluate import score
+from anonymiser.evaluate.score import (
     evaluate,
     load_dataset,
     main,
     score_masked,
 )
-from submission.tests.fakes import FakeLLMClient
+from anonymiser.tests.fakes import FakeLLMClient
 
 
 def no_findings(prompt, schema):

@@ -1,8 +1,8 @@
-from submission.anonymizer.agents.detector import format_categories
-from submission.anonymizer.base_prompt import compose
-from submission.anonymizer.categories import Category
-from submission.anonymizer.llm import LLMClient
-from submission.anonymizer.schemas import ContextResult, Finding
+from anonymiser.agents.detector import format_categories
+from anonymiser.base_prompt import compose
+from anonymiser.categories import Category
+from anonymiser.llm import LLMClient
+from anonymiser.schemas import ContextResult, Finding
 
 
 def check_context(text: str, categories: list[Category],

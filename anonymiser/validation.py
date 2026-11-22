@@ -1,8 +1,8 @@
 import re
 
-from submission.anonymizer import config
-from submission.anonymizer.llm import GeminiClient, LLMClient
-from submission.anonymizer.schemas import EntailmentScore
+from anonymiser import config
+from anonymiser.llm import GeminiClient, LLMClient
+from anonymiser.schemas import EntailmentScore
 
 
 class DocumentValidator:

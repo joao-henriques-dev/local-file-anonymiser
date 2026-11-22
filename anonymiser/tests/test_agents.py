@@ -1,11 +1,11 @@
 import unittest
 
-from submission.anonymizer.agents.context_checker import check_context
-from submission.anonymizer.agents.detector import detect
-from submission.anonymizer.agents.reviewer import review
-from submission.anonymizer.categories import Category
-from submission.anonymizer.schemas import Finding
-from submission.tests.fakes import FakeLLMClient
+from anonymiser.agents.context_checker import check_context
+from anonymiser.agents.detector import detect
+from anonymiser.agents.reviewer import review
+from anonymiser.categories import Category
+from anonymiser.schemas import Finding
+from anonymiser.tests.fakes import FakeLLMClient
 
 HEALTH = Category(
     id="health",

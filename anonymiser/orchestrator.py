@@ -1,12 +1,12 @@
 from dataclasses import dataclass
 
-from submission.anonymizer.agents.context_checker import check_context
-from submission.anonymizer.agents.detector import detect
-from submission.anonymizer.agents.reviewer import review
-from submission.anonymizer.categories import Category, load_categories
-from submission.anonymizer.llm import LLMClient
-from submission.anonymizer.masking import apply_findings
-from submission.anonymizer.schemas import Finding
+from anonymiser.agents.context_checker import check_context
+from anonymiser.agents.detector import detect
+from anonymiser.agents.reviewer import review
+from anonymiser.categories import Category, load_categories
+from anonymiser.llm import LLMClient
+from anonymiser.masking import apply_findings
+from anonymiser.schemas import Finding
 
 
 @dataclass

@@ -1,8 +1,8 @@
 import json
 import unittest
 
-from submission.anonymizer.orchestrator import run_pipeline
-from submission.tests.fakes import FakeLLMClient
+from anonymiser.orchestrator import run_pipeline
+from anonymiser.tests.fakes import FakeLLMClient
 
 DETECTOR = "detetor de dados sensíveis"
 CONTEXT = "verificação de contexto"

@@ -1,6 +1,6 @@
-from submission.anonymizer.base_prompt import compose
-from submission.anonymizer.llm import LLMClient
-from submission.anonymizer.schemas import Finding, ReviewResult
+from anonymiser.base_prompt import compose
+from anonymiser.llm import LLMClient
+from anonymiser.schemas import Finding, ReviewResult
 
 
 def review(masked_text: str, base: str, client: LLMClient) -> list[Finding]:

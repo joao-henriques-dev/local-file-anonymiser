@@ -1,20 +1,20 @@
 """Anonymise a PDF document.
 
 Run from the repo root:
-    python -m submission.run report.pdf                  # -> report.masked.txt
-    python -m submission.run report.pdf -o masked.txt    # chosen output path
+    python -m anonymiser report.pdf                # -> report.masked.txt
+    python -m anonymiser report.pdf -o masked.txt  # chosen output path
 """
 import argparse
 import sys
 from pathlib import Path
 
-from submission.anonymizer import config
-from submission.anonymizer.base_prompt import load_base
-from submission.anonymizer.extract import pdf_to_text
-from submission.anonymizer.llm import LLMClient, make_client
-from submission.anonymizer.orchestrator import run_pipeline
-from submission.anonymizer.report import write_report, write_utf8
-from submission.validation import DocumentValidator
+from anonymiser import config
+from anonymiser.base_prompt import load_base
+from anonymiser.extract import pdf_to_text
+from anonymiser.llm import LLMClient, make_client
+from anonymiser.orchestrator import run_pipeline
+from anonymiser.report import write_report, write_utf8
+from anonymiser.validation import DocumentValidator
 
 
 def main(argv: list[str] | None = None,
